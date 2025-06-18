@@ -20,7 +20,7 @@ export const Result = () => {
 
           <div className="w-2/3">
             <h1 className="text-2xl font-semibold text-gray-800">
-              훌륭가죠? 접니다
+              훌륭하죠? 접니다
             </h1>
             <h2 className="text-xl text-gray-700 mt-2">손흥민</h2>
             <p className="text-gray-500 mt-1 text-sm">
