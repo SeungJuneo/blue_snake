@@ -50,6 +50,31 @@ export const Admin_page = () => {
                         Option 6
                       </a>
                     </li>
+                    <li className="px-4 py-2 hover-effect">
+                      <a href="#" className="block">
+                        Option 6
+                      </a>
+                    </li>
+                    <li className="px-4 py-2 hover-effect">
+                      <a href="#" className="block">
+                        Option 6
+                      </a>
+                    </li>
+                    <li className="px-4 py-2 hover-effect">
+                      <a href="#" className="block">
+                        Option 6
+                      </a>
+                    </li>
+                    <li className="px-4 py-2 hover-effect">
+                      <a href="#" className="block">
+                        Option 6
+                      </a>
+                    </li>
+                    <li className="px-4 py-2 hover-effect">
+                      <a href="#" className="block">
+                        Option 6
+                      </a>
+                    </li>
                   </ul>
                 </nav>
               </aside>
