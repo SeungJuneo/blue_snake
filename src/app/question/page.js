@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+import { GoogleGenAI } from "@google/genai";
 
 const questions = [
   "당신이 생각한 인물은 실제 인물인가요?",
@@ -15,7 +16,16 @@ export const Question = () => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState([]);
   const router = useRouter();
+  const ai = new GoogleGenAI({ apiKey: "YOUR_API_KEY" });
 
+  async function main() {
+    const response = await ai.models.generateContent({
+      model: "gemini-2.5-flash",
+      contents:
+        "아키네이터처럼 질문을 하다가 답을 알겠으면 '정답: ' 이렇게 이야기해주고 멈춰줘",
+    });
+    console.log(response.text);
+  }
   const handleAnswer = (answer) => {
     // 응답 저장
     setAnswers((prevAnswers) => [...prevAnswers, answer]);
