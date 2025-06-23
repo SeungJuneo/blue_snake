@@ -1,6 +1,9 @@
+"use client";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 export const MoreTry = () => {
+  const router = useRouter();
   return (
     <>
       <div className="container mx-auto p-8">
@@ -13,9 +16,9 @@ export const MoreTry = () => {
             <Image
               src="/20241226500264.jpg"
               alt="Dragon Image"
-              className="rounded-lg shadow-md"
-              width={200}
-              height={200}
+              className="rounded-lg shadow-md select-none"
+              width={400}
+              height={400}
             />
           </section>
 
@@ -25,10 +28,16 @@ export const MoreTry = () => {
                 더 하시겠습니까?
               </h2>
               <div className="flex justify-around">
-                <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+                <button
+                  className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded cursor-pointer"
+                  onClick={() => window.history.back(-1)}
+                >
                   예
                 </button>
-                <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                <button
+                  className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded cursor-pointer"
+                  onClick={() => router.push("/result")}
+                >
                   아니요
                 </button>
               </div>
@@ -48,6 +57,9 @@ export const MoreTry = () => {
             </div>
           </section>
         </main>
+        <footer className="text-center mt-8">
+          <p className="text-gray-500">© 2024 Dragon App</p>
+        </footer>
       </div>
     </>
   );

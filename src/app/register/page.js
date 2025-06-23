@@ -14,10 +14,10 @@ export const Register = ({ isOpen, onClose }) => {
 
   return (
     <>
-      <div className="modal-overlay">
-        <div className="modal">
+      <div className="fixed inset-0 bg-gray-500/50 bg-opacity-100 flex justify-center items-center backdrop-blur-sm">
+        <div className="bg-white p-6 rounded-lg shadow-lg relative min-w-[300px]">
           <div className="modal-header flex justify-between w-full">
-            <h2 className="modal-title">Dragon</h2>
+            <h2 className="modal-title m-auto">회원가입</h2>
             <button
               onClick={onClose}
               aria-label="Close modal"
@@ -31,14 +31,14 @@ export const Register = ({ isOpen, onClose }) => {
             <div className="mb-4">
               <label
                 htmlFor="id"
-                className="block text-gray-700 text-sm font-bold mb-2"
+                className="block text-gray-700 text-sm font-bold mb-2 mt-4"
               >
                 아이디
               </label>
               <input
                 type="text"
                 id="id"
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline border-gray-300"
                 placeholder="아이디를 입력하세요"
               />
             </div>
@@ -52,7 +52,7 @@ export const Register = ({ isOpen, onClose }) => {
               <input
                 type="password"
                 id="password"
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline border-gray-300"
                 placeholder="비밀번호를 입력하세요"
               />
             </div>
@@ -66,13 +66,15 @@ export const Register = ({ isOpen, onClose }) => {
               <input
                 type="email"
                 id="email"
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline border-gray-300"
                 placeholder="이메일 주소를 입력하세요"
               />
             </div>
           </div>
 
-          <button className="border btn-primary ml-4">회원가입</button>
+          <button className=" btn-primary p-2 w-full mt-2 bg-green-400 ">
+            가입하기
+          </button>
         </div>
       </div>
     </>

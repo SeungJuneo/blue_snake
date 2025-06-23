@@ -1,45 +1,73 @@
+"use client";
+import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+
+const questions = [
+  "당신이 생각한 인물은 실제 인물인가요?",
+  "그 인물은 남성인가요?",
+  "그 인물은 한국 출신인가요?",
+  "그 인물은 연예인인가요?",
+  "그 인물은 살아있나요?",
+  // ... 총 20개까지 질문 추가
+];
+
 export const Question = () => {
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [answers, setAnswers] = useState([]);
+  const router = useRouter();
+
+  const handleAnswer = (answer) => {
+    // 응답 저장
+    setAnswers((prevAnswers) => [...prevAnswers, answer]);
+
+    // 다음 질문 or 결과
+    if (currentQuestionIndex < questions.length - 1) {
+      setCurrentQuestionIndex(currentQuestionIndex + 1);
+    } else {
+      alert("질문이 끝났습니다! 결과를 계산합니다.");
+      // 여기서 추론 로직이나 결과 표시
+      router.push("/moreTry");
+    }
+  };
+
   return (
-    <>
-      <div className="bg-white rounded-lg shadow-xl p-8 w-full max-w-md">
-        <h1 className="text-2xl font-bold text-center mb-6 text-gray-800">
-          Dragon
-        </h1>
-
-        <div className="flex flex-col">
-          <div className="mb-4">
-            {/* <img src="https://placehold.co/400x300" alt="Dragon" className="rounded-lg"> */}
-          </div>
-
-          <div className="mb-6">
-            <h2 className="text-lg font-semibold text-gray-700 mb-2">
-              1. Question bigger than the image
-            </h2>
-            <p className="text-gray-600">
-              This is a sample question. It should be bigger than the image.
-            </p>
-          </div>
-
-          <div className="space-y-3">
-            <button className="w-full bg-blue-500 hover:bg-blue-400 text-white font-bold py-3 px-4 rounded focus:outline-none focus:shadow-outline">
-              예
-            </button>
-            <button className="w-full bg-blue-500 hover:bg-blue-400 text-white font-bold py-3 px-4 rounded focus:outline-none focus:shadow-outline">
-              아니요
-            </button>
-            <button className="w-full bg-blue-500 hover:bg-blue-400 text-white font-bold py-3 px-4 rounded focus:outline-none focus:shadow-outline">
-              모르겠습니다
-            </button>
-          </div>
-
-          <div className="mt-6">
-            <button className="bg-green-500 hover:bg-green-400 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-              이전 질문
-            </button>
+    <div className="bg-white rounded-lg shadow-xl p-8 w-full">
+      <h1 className="text-2xl font-bold text-center mb-6 text-gray-800">
+        Blue_snake
+      </h1>
+      <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-indigo-900 to-purple-700 text-white p-6">
+        <div className="flex flex-col items-center">
+          <div className="bg-white text-black rounded-xl p-4 text-lg shadow-lg max-w-md">
+            {questions[currentQuestionIndex]}
           </div>
         </div>
+
+        <div className="mt-8 grid grid-cols-3 gap-4 text-sm">
+          <button
+            className="bg-green-500 hover:bg-green-600 px-4 py-2 rounded"
+            onClick={() => handleAnswer("예")}
+          >
+            예
+          </button>
+          <button
+            className="bg-red-500 hover:bg-red-600 px-4 py-2 rounded"
+            onClick={() => handleAnswer("아니오")}
+          >
+            아니오
+          </button>
+          <button
+            className="bg-gray-400 hover:bg-gray-500 px-4 py-2 rounded"
+            onClick={() => handleAnswer("모르겠음")}
+          >
+            모르겠음
+          </button>
+        </div>
+
+        <div className="mt-6 text-sm text-gray-200">
+          질문 {currentQuestionIndex + 1} / {questions.length}
+        </div>
       </div>
-    </>
+    </div>
   );
 };
 
