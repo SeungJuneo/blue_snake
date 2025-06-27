@@ -1,7 +1,35 @@
 "use client";
-import { useEffect } from "react";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { useModal } from "../../contexts/ModalContext";
 
 export const Login = ({ isOpen, onClose }) => {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const { closeAll } = useModal();
+
+  const handleLogin = async () => {
+    try {
+      const { data } = await axios.post(
+        "http://localhost:8081/api/common/login",
+        {
+          username: { username },
+          password: { password },
+        }
+      );
+      console.log("로그인 되었습니다.");
+      closeAll();
+    } catch (err) {
+      alert(err.response.data);
+    }
+
+    // if (res.status === 200) {
+    //   alert("로그인이 성공하였습니다.");
+    // } else {
+    //   alert("실패합니다.");
+    // }
+  };
+
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key === "Escape") onClose();
@@ -40,6 +68,7 @@ export const Login = ({ isOpen, onClose }) => {
                 id="id"
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline border-gray-300"
                 placeholder="아이디를 입력하세요"
+                onChange={(e) => setUsername(e.target.value)}
               />
             </div>
             <div className="mb-4">
@@ -54,11 +83,15 @@ export const Login = ({ isOpen, onClose }) => {
                 id="password"
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline border-gray-300"
                 placeholder="비밀번호를 입력하세요"
+                onChange={(e) => setPassword(e.target.value)}
               />
             </div>
           </div>
           <div className="w-full text-center">
-            <button className="bg-green-400 btn-primary p-2 mt-2 mr-3 w-full py-2 px-3">
+            <button
+              className="bg-green-400 btn-primary p-2 mt-2 mr-3 w-full py-2 px-3"
+              onClick={handleLogin}
+            >
               로그인
             </button>
           </div>

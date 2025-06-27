@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@google/genai": "^1.6.0",
+    "axios": "^1.10.0",
     "next": "15.3.3",
     "next-auth": "^4.24.11",
     "nextjs": "^0.0.3",

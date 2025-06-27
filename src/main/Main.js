@@ -3,33 +3,16 @@
 import Login from "@/app/login/pape";
 import { Register } from "@/app/register/page";
 import Link from "next/link";
-import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Image from "next/image";
+import { useModal } from "../contexts/ModalContext";
 
 export const Main = () => {
-  const { data: session } = useSession();
   const router = useRouter();
-
-  const [isRegisterOpen, setIsLoginOpen] = useState(false);
-  const [isLoginOpen, setIsRegisterOpen] = useState(false);
+  const { isLoginOpen, isRegisterOpen, openLogin, openRegister, closeAll } =
+    useModal();
   const [open, setOpen] = useState(false);
-
-  const openRegister = () => {
-    setIsLoginOpen(true);
-    setIsRegisterOpen(false);
-  };
-
-  const openLogin = () => {
-    setIsRegisterOpen(true);
-    setIsLoginOpen(false);
-  };
-
-  const closeAll = () => {
-    setIsLoginOpen(false);
-    setIsRegisterOpen(false);
-  };
 
   const games = {
     game1: { correctanswer: "손은", user: "user01" },
@@ -105,7 +88,7 @@ export const Main = () => {
         <aside className="col-span-1">
           <div className="bg-white shadow rounded p-4">
             <h2 className="text-lg font-semibold mb-2">최근 10게임</h2>
-            <ul className="       z ">
+            <ul className=" overflow-hidden ">
               {Object.entries(games).map(([key, game]) => (
                 <li
                   key={key}

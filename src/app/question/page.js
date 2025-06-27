@@ -100,8 +100,8 @@ export const Question = () => {
         !questions[nextIndex - 1]?.includes("정답: ")
       ) {
         setCurrentQuestionIndex(nextIndex);
-        console.log(questions);
-        console.log(questions[nextIndex - 1]);
+        // console.log(questions);
+        // console.log(questions[nextIndex - 1]);
       } else {
         alert("질문이 끝났습니다! 결과를 계산합니다.");
         setGameOver(true);
