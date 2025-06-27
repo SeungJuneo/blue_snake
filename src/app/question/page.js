@@ -1,54 +1,134 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { GoogleGenAI } from "@google/genai";
 
-const questions = [
-  "당신이 생각한 인물은 실제 인물인가요?",
-  "그 인물은 남성인가요?",
-  "그 인물은 한국 출신인가요?",
-  "그 인물은 연예인인가요?",
-  "그 인물은 살아있나요?",
-  // ... 총 20개까지 질문 추가
-];
+const ai = new GoogleGenAI({ apiKey: process.env.NEXT_PUBLIC_API_KEY });
+
+const removeDuplicateSentences = (text) => {
+  // 문장 단위로 분리 (한국어 문장도 마침표, 느낌표, 물음표 기준으로 분리 가능)
+  // 여기서는 간단히 마침표(.) 기준으로 분리합니다.
+  const sentences = text.split(/(?<=[.?!])\s*/);
+  const seen = new Set();
+  const filtered = [];
+
+  for (const sentence of sentences) {
+    if (sentence && !seen.has(sentence)) {
+      seen.add(sentence);
+      filtered.push(sentence);
+    }
+  }
+
+  return filtered.join(" ").trim();
+};
 
 export const Question = () => {
+  const [questions, setQuestions] = useState([]); // 질문 리스트
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState([]);
+  const [gameOver, setGameOver] = useState(false);
   const router = useRouter();
-  const ai = new GoogleGenAI({ apiKey: "YOUR_API_KEY" });
+  const chatRef = useRef(null); // 채팅 세션 유지용
+  const [isLoading, setIsLoading] = useState(false);
 
-  async function main() {
-    const response = await ai.models.generateContent({
-      model: "gemini-2.5-flash",
-      contents:
-        "아키네이터처럼 질문을 하다가 답을 알겠으면 '정답: ' 이렇게 이야기해주고 멈춰줘",
+  // AI 질문 스트림 받아오기
+  const fetchAIResponse = async (userAnswer, targetIndex) => {
+    if (!chatRef.current) {
+      chatRef.current = ai.chats.create({
+        model: "gemini-2.5-flash-lite-preview-06-17",
+        history: [
+          {
+            role: "user",
+            parts: [
+              {
+                text: "아키네이터처럼 '네', '아니요', '모르겠어요'로 대답할 수 있는 질문을 하다가 '정답:'으로 결론을 내줘. 질문은 최대 35개로 해줘. 괄호나 부연설명은 생략해. '당신은'이라는 말 쓰지 마, 질문은 한번에 한번씩만. 질문을 시작해줘.",
+              },
+            ],
+          },
+        ],
+      });
+    }
+
+    if (userAnswer) {
+      chatRef.current.history.push({
+        role: "user",
+        parts: [{ text: userAnswer }],
+      });
+    }
+
+    const stream = await chatRef.current.sendMessageStream({
+      message: userAnswer || "",
     });
-    console.log(response.text);
-  }
-  const handleAnswer = (answer) => {
-    // 응답 저장
-    setAnswers((prevAnswers) => [...prevAnswers, answer]);
 
-    // 다음 질문 or 결과
-    if (currentQuestionIndex < questions.length - 1) {
-      setCurrentQuestionIndex(currentQuestionIndex + 1);
-    } else {
-      alert("질문이 끝났습니다! 결과를 계산합니다.");
-      // 여기서 추론 로직이나 결과 표시
-      router.push("/moreTry");
+    let fullText = "";
+
+    for await (const chunk of stream) {
+      fullText += chunk.text;
+    }
+
+    fullText = removeDuplicateSentences(fullText);
+
+    setQuestions((prev) => {
+      const updated = [...prev];
+      updated[targetIndex] = fullText.trim(); // 다음 질문은 현재 인덱스 + 1 자리에 넣음
+      return updated;
+    });
+    chatRef.current.history.push({
+      role: "model",
+      parts: [{ text: fullText }],
+    });
+  };
+
+  useEffect(() => {
+    const initAIResponse = async () => {
+      await fetchAIResponse("", 0); // 초기 질문은 인덱스 0
+    };
+    initAIResponse();
+  }, []);
+
+  const handleAnswer = async (answer) => {
+    if (gameOver || isLoading) return;
+
+    setIsLoading(true);
+    setAnswers((prev) => [...prev, answer]);
+    const nextIndex = currentQuestionIndex + 1;
+
+    try {
+      await fetchAIResponse(answer, nextIndex);
+      if (
+        currentQuestionIndex < 34 &&
+        !questions[nextIndex - 1]?.includes("정답: ")
+      ) {
+        setCurrentQuestionIndex(nextIndex);
+        console.log(questions);
+        console.log(questions[nextIndex - 1]);
+      } else {
+        alert("질문이 끝났습니다! 결과를 계산합니다.");
+        setGameOver(true);
+        router.push({
+          pathname: "/moreTry",
+          query: { result: questions[nextIndex - 1] },
+        });
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
     <div className="bg-white rounded-lg shadow-xl p-8 w-full">
-      <h1 className="text-2xl font-bold text-center mb-6 text-gray-800">
+      <h1
+        className="text-2xl font-bold text-center mb-6 text-gray-800 cursor-pointer"
+        onClick={() => router.push("/")}
+      >
         Blue_snake
       </h1>
       <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-indigo-900 to-purple-700 text-white p-6">
         <div className="flex flex-col items-center">
-          <div className="bg-white text-black rounded-xl p-4 text-lg shadow-lg max-w-md">
-            {questions[currentQuestionIndex]}
+          <div className="bg-white text-black rounded-xl p-4 text-lg shadow-lg max-w-md min-h-[100px]">
+            {questions[currentQuestionIndex] || "로딩 중..."}
           </div>
         </div>
 
@@ -56,25 +136,28 @@ export const Question = () => {
           <button
             className="bg-green-500 hover:bg-green-600 px-4 py-2 rounded"
             onClick={() => handleAnswer("예")}
+            disabled={isLoading || gameOver}
           >
             예
           </button>
           <button
             className="bg-red-500 hover:bg-red-600 px-4 py-2 rounded"
             onClick={() => handleAnswer("아니오")}
+            disabled={isLoading || gameOver}
           >
             아니오
           </button>
           <button
             className="bg-gray-400 hover:bg-gray-500 px-4 py-2 rounded"
             onClick={() => handleAnswer("모르겠음")}
+            disabled={isLoading || gameOver}
           >
             모르겠음
           </button>
         </div>
 
         <div className="mt-6 text-sm text-gray-200">
-          질문 {currentQuestionIndex + 1} / {questions.length}
+          질문 {currentQuestionIndex + 1} / 35
         </div>
       </div>
     </div>

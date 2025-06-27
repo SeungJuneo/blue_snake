@@ -23,30 +23,11 @@ export const MoreTry = () => {
           </section>
 
           <section className="flex flex-col justify-between">
-            <div className="bg-white rounded-lg shadow-md p-6">
+            <div className="bg-white rounded-lg shadow-md p-12">
               <h2 className="text-lg font-semibold text-gray-700 mb-4">
-                더 하시겠습니까?
+                당신이 생각한게 맞습니까?
               </h2>
-              <div className="flex justify-around">
-                <button
-                  className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded cursor-pointer"
-                  onClick={() => window.history.back(-1)}
-                >
-                  예
-                </button>
-                <button
-                  className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded cursor-pointer"
-                  onClick={() => router.push("/result")}
-                >
-                  아니요
-                </button>
-              </div>
-            </div>
-
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <h2 className="text-lg font-semibold text-gray-700 mb-4">
-                해당 이미지
-              </h2>
+              <h2 className="text-lg font-semibold text-gray-700 mb-4">이름</h2>
               <Image
                 src="/yes.jpg"
                 alt="Displayed Image"
@@ -54,6 +35,23 @@ export const MoreTry = () => {
                 width={200}
                 height={100}
               />
+            </div>
+
+            <div className="bg-white rounded-lg shadow-md p-6">
+              <div className="flex justify-around">
+                <button
+                  className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded cursor-pointer"
+                  onClick={() => router.push("/result")}
+                >
+                  예
+                </button>
+                <button
+                  className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded cursor-pointer"
+                  onClick={() => router.push("/")}
+                >
+                  아니요
+                </button>
+              </div>
             </div>
           </section>
         </main>

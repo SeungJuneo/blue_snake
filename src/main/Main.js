@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import Image from "next/image";
 
 export const Main = () => {
   const { data: session } = useSession();
@@ -28,6 +29,19 @@ export const Main = () => {
   const closeAll = () => {
     setIsLoginOpen(false);
     setIsRegisterOpen(false);
+  };
+
+  const games = {
+    game1: { correctanswer: "손은", user: "user01" },
+    game2: { correctanswer: "트랄라", user: "user02" },
+    game3: { correctanswer: "scp-049", user: "user03" },
+    game4: { correctanswer: "scp-106", user: "user04" },
+    game5: { correctanswer: "scp-3006", user: "user05" },
+    game6: { correctanswer: "scp-217", user: "user06" },
+    game7: { correctanswer: "scp-079", user: "user07" },
+    game8: { correctanswer: "scp-939", user: "user08" },
+    game9: { correctanswer: "scp-096", user: "user09" },
+    game10: { correctanswer: "수감자", user: "user10" },
   };
   return (
     <>
@@ -72,8 +86,11 @@ export const Main = () => {
                 >
                   마이페이지
                 </li>
-                <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                  메뉴 2
+                <li
+                  className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                  onClick={() => router.push("/admin_page")}
+                >
+                  관리자페이지
                 </li>
                 <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
                   로그아웃
@@ -88,37 +105,18 @@ export const Main = () => {
         <aside className="col-span-1">
           <div className="bg-white shadow rounded p-4">
             <h2 className="text-lg font-semibold mb-2">최근 10게임</h2>
-            <ul>
-              <li className="py-2 border-b border-gray-200 flex items-center justify-between">
-                손은
-                <button className="text-red-500 hover:text-red-700">
-                  &times;
-                </button>
-              </li>
-              <li className="py-2 border-b border-gray-200 flex items-center justify-between">
-                트랄라
-                <button className="text-red-500 hover:text-red-700">
-                  &times;
-                </button>
-              </li>
-              <li className="py-2 border-b border-gray-200 flex items-center justify-between">
-                게임 3
-                <button className="text-red-500 hover:text-red-700">
-                  &times;
-                </button>
-              </li>
-              <li className="py-2 border-b border-gray-200 flex items-center justify-between">
-                게임 4
-                <button className="text-red-500 hover:text-red-700">
-                  &times;
-                </button>
-              </li>
-              <li className="py-2 flex items-center justify-between">
-                게임 5
-                <button className="text-red-500 hover:text-red-700">
-                  &times;
-                </button>
-              </li>
+            <ul className="       z ">
+              {Object.entries(games).map(([key, game]) => (
+                <li
+                  key={key}
+                  className="py-4 border-b border-gray-200 flex items-center justify-between"
+                >
+                  {game.correctanswer}
+                  <button className="text-red-500 hover:text-red-700">
+                    &times;
+                  </button>
+                </li>
+              ))}
             </ul>
           </div>
           <div className="mt-2 text-sm text-gray-600">
@@ -127,18 +125,28 @@ export const Main = () => {
         </aside>
         <main className="col-span-1">
           <div className="bg-white shadow rounded p-4">
-            <h2 className="text-2xl font-semibold text-center mb-4">Dragon</h2>
+            <Image
+              src="/blue_snake.png"
+              alt="Character"
+              className="rounded-lg"
+              height={500}
+              width={500}
+            />
+            <h2 className="text-2xl font-semibold text-center mb-4 p-4">
+              Dragon
+            </h2>
             <div className="flex justify-center">
               {/* <img src="https://placehold.co/200x200" alt="User Avatar" className="rounded-full mb-4"> */}
             </div>
             <div className="text-center">
-              <Link href="/question">
-                <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-                  Start
-                </button>
+              <Link
+                href="/question"
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-4 px-8 rounded focus:outline-none focus:shadow-outline text-xl"
+              >
+                Start
               </Link>
 
-              <div className="mt-2 text-sm text-gray-500">Click to Start</div>
+              <div className="mt-6 text-sm text-gray-500 ">Click to Start</div>
             </div>
           </div>
         </main>
@@ -151,9 +159,14 @@ export const Main = () => {
                 &times;
               </button>
             </div>
-            <div className="flex items-center justify-center h-24 bg-gray-100 text-gray-500 rounded">
-              광고 이미지
-            </div>
+            <Image
+              src="/"
+              alt="ax"
+              className="flex items-center justify-center p-5 bg-gray-100 text-gray-500 rounded"
+              height={645}
+              width={500}
+              aria-valuetext="광고 이미지"
+            ></Image>
           </div>
         </aside>
       </div>
