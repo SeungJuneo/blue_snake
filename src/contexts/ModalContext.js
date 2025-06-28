@@ -6,6 +6,7 @@ const ModalContext = createContext();
 export const ModalProvider = ({ children }) => {
   const [isRegisterOpen, setIsRegisterOpen] = useState(false);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
+  const [loginedInUser, setLoggedInUser] = useState(false);
 
   const openRegister = () => {
     setIsRegisterOpen(true);
@@ -24,7 +25,15 @@ export const ModalProvider = ({ children }) => {
 
   return (
     <ModalContext.Provider
-      value={{ isRegisterOpen, isLoginOpen, openRegister, openLogin, closeAll }}
+      value={{
+        isRegisterOpen,
+        isLoginOpen,
+        openRegister,
+        openLogin,
+        closeAll,
+        loginedInUser,
+        setLoggedInUser,
+      }}
     >
       {children}
     </ModalContext.Provider>

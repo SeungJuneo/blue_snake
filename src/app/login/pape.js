@@ -6,7 +6,7 @@ import { useModal } from "../../contexts/ModalContext";
 export const Login = ({ isOpen, onClose }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const { closeAll } = useModal();
+  const { closeAll, setLoggedInUser } = useModal();
 
   const handleLogin = async () => {
     try {
@@ -18,6 +18,7 @@ export const Login = ({ isOpen, onClose }) => {
         }
       );
       console.log("로그인 되었습니다.");
+      setLoggedInUser(true);
       closeAll();
     } catch (err) {
       alert(err.response.data);

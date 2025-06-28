@@ -4,16 +4,38 @@ import Login from "@/app/login/pape";
 import { Register } from "@/app/register/page";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import { useModal } from "../contexts/ModalContext";
 
 export const Main = () => {
   const router = useRouter();
-  const { isLoginOpen, isRegisterOpen, openLogin, openRegister, closeAll } =
-    useModal();
-  const [open, setOpen] = useState(false);
+  const {
+    isLoginOpen,
+    isRegisterOpen,
+    openLogin,
+    openRegister,
+    closeAll,
+    loginedInUser,
+    setLoggedInUser,
+  } = useModal();
 
+  const [open, setOpen] = useState(false);
+  const ref = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (ref.current && !ref.current.contains(event.target)) {
+        setOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
   const games = {
     game1: { correctanswer: "손은", user: "user01" },
     game2: { correctanswer: "트랄라", user: "user02" },
@@ -26,6 +48,7 @@ export const Main = () => {
     game9: { correctanswer: "scp-096", user: "user09" },
     game10: { correctanswer: "수감자", user: "user10" },
   };
+
   return (
     <>
       <header className="bg-white shadow">
@@ -40,13 +63,17 @@ export const Main = () => {
           </div>
           <div className="flex items-center space-x-4">
             <button
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+              className={`bg-blue-500 hover:bg-blue-700 ${
+                loginedInUser ? "opacity-0" : "opacity-100"
+              } text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline cursor-pointer`}
               onClick={openLogin}
             >
               로그인
             </button>
             <button
-              className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+              className={`bg-green-500 hover:bg-green-700 ${
+                loginedInUser ? "opacity-0" : "opacity-100"
+              } text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline cursor-pointer`}
               onClick={openRegister}
             >
               회원가입
@@ -59,6 +86,7 @@ export const Main = () => {
                 O
               </button>
               <ul
+                ref={ref}
                 className={`absolute overflow-hidden  transition-all duration-300  ease-in-out ${
                   open ? "max-h-40 opacity-100 " : "max-h-0 opacity-0 "
                 } w-36 bg-white rounded shadow mt-2 text-black right-0`}
@@ -75,7 +103,10 @@ export const Main = () => {
                 >
                   관리자페이지
                 </li>
-                <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                <li
+                  className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                  onClick={() => setLoggedInUser(false)}
+                >
                   로그아웃
                 </li>
               </ul>
