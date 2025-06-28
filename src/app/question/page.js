@@ -30,9 +30,12 @@ export const Question = () => {
   const router = useRouter();
   const chatRef = useRef(null); // 채팅 세션 유지용
   const [isLoading, setIsLoading] = useState(false);
+  const clickLocked = useRef(false);
 
   // AI 질문 스트림 받아오기
   const fetchAIResponse = async (userAnswer, targetIndex) => {
+    console.log("[fetchAIResponse] received:", userAnswer);
+    const MAX_HISTORY = 10;
     if (!chatRef.current) {
       chatRef.current = ai.chats.create({
         model: "gemini-2.5-flash-lite-preview-06-17",
@@ -56,8 +59,11 @@ export const Question = () => {
       });
     }
 
+    // if (chatRef.current.history.length > MAX_HISTORY) {
+    //   chatRef.current.history = chatRef.current.history.slice(-MAX_HISTORY);
+    // }
     const stream = await chatRef.current.sendMessageStream({
-      message: userAnswer || "",
+      message: "",
     });
 
     let fullText = "";
@@ -87,18 +93,20 @@ export const Question = () => {
   }, []);
 
   const handleAnswer = async (answer) => {
-    if (gameOver || isLoading) return;
-
+    if (gameOver || isLoading || clickLocked.current) return;
+    console.log("[handleAnswer] clicked with:", answer);
+    clickLocked.current = true;
     setIsLoading(true);
-    setAnswers((prev) => [...prev, answer]);
+
+    const currentAnswer = answer;
+
     const nextIndex = currentQuestionIndex + 1;
 
     try {
-      await fetchAIResponse(answer, nextIndex);
-      if (
-        currentQuestionIndex < 34 &&
-        !questions[nextIndex - 1]?.includes("정답: ")
-      ) {
+      await fetchAIResponse(currentAnswer, nextIndex);
+      const lastQuestion = questions[nextIndex - 1] || "";
+
+      if (currentQuestionIndex < 34 && !lastQuestion?.includes("정답: ")) {
         setCurrentQuestionIndex(nextIndex);
         // console.log(questions);
         // console.log(questions[nextIndex - 1]);
@@ -107,13 +115,14 @@ export const Question = () => {
         setGameOver(true);
         router.push({
           pathname: "/moreTry",
-          query: { result: questions[nextIndex - 1] },
+          query: { result: lastQuestion },
         });
       }
     } catch (error) {
       console.error(error);
     } finally {
       setIsLoading(false);
+      clickLocked.current = false;
     }
   };
 
@@ -134,11 +143,39 @@ export const Question = () => {
 
         <div className="mt-8 grid grid-cols-3 gap-4 text-sm">
           <button
-            className="bg-green-500 hover:bg-green-600 px-4 py-2 rounded"
+            className={`"bg-green-500 hover:bg-green-600 px-4 py-2 rounded"
+              ${
+                isLoading
+                  ? "bg-green-400 cursor-not-allowed"
+                  : "bg-green-500 hover:bg-green-600"
+              } 
+              text-white transition duration-200`}
             onClick={() => handleAnswer("예")}
             disabled={isLoading || gameOver}
           >
-            예
+            {isLoading && (
+              <svg
+                className="animate-spin h-5 w-5 text-white"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                ></circle>
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+                ></path>
+              </svg>
+            )}
+            <span>{isLoading ? "생성 중..." : "예"}</span>
           </button>
           <button
             className="bg-red-500 hover:bg-red-600 px-4 py-2 rounded"
