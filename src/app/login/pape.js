@@ -50,7 +50,7 @@ export const Login = ({ isOpen, onClose }) => {
             <button
               onClick={onClose}
               aria-label="Close modal"
-              className="text-gray-500 hover:text-gray-700 text-xl font-bold p-4 -m-5"
+              className="text-gray-500 hover:text-gray-700 text-xl font-bold p-4 -m-5 cursor-pointer"
             >
               &times;
             </button>
@@ -90,13 +90,12 @@ export const Login = ({ isOpen, onClose }) => {
           </div>
           <div className="w-full text-center">
             <button
-              className="bg-green-400 btn-primary p-2 mt-2 mr-3 w-full py-2 px-3"
+              className="bg-green-400 btn-primary p-2 mt-2 mr-3 w-full py-2 px-3 cursor-pointer"
               onClick={handleLogin}
             >
               로그인
             </button>
           </div>
-          <button className=" btn-primary ml-4 p-2">회원가입</button>
         </div>
       </div>
     </>

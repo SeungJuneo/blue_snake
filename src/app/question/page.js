@@ -13,7 +13,10 @@ const removeDuplicateSentences = (text) => {
   const filtered = [];
 
   for (const sentence of sentences) {
-    if (sentence && !seen.has(sentence)) {
+    const trimmed = sentence.trim();
+
+    if (trimmed.toLowerCase() === "undefined") continue;
+    if (trimmed && !seen.has(trimmed)) {
       seen.add(sentence);
       filtered.push(sentence);
     }
@@ -44,7 +47,7 @@ export const Question = () => {
             role: "user",
             parts: [
               {
-                text: "아키네이터처럼 '네', '아니요', '모르겠어요'로 대답할 수 있는 질문을 하다가 '정답:'으로 결론을 내줘. 질문은 최대 35개로 해줘. 괄호나 부연설명은 생략해. '당신은'이라는 말 쓰지 마, 질문은 한번에 한번씩만. 질문을 시작해줘.",
+                text: "사용자에게 예, 아니오, 몰라요로 대답할 수 있는 질문을 구체적으로 해주고 10개 미만으로 정답을 맞출 수 있도록 해줘. 내가 인물 1명을 생각할꺼야. 나에게 10개 미만의 구체적인 질문을 해주고 내가 생각하는 캐릭터를 맞춰줘. 10개의 질문이 끝나면 다른 말 말고 '정답: {네가 최종적으로 추측한 것}'이라고 해줘. 질문은 한개씩 한줄씩만 해줘. 되도록이면 한줄만 출력해줘.",
               },
             ],
           },
@@ -113,10 +116,11 @@ export const Question = () => {
       } else {
         alert("질문이 끝났습니다! 결과를 계산합니다.");
         setGameOver(true);
-        router.push({
-          pathname: "/moreTry",
-          query: { result: lastQuestion },
-        });
+        const cleanText = lastQuestion.replace("정답: ", "");
+        const queryString = new URLSearchParams({
+          result: cleanText,
+        }).toString();
+        router.push(`/moreTry?${queryString}`);
       }
     } catch (error) {
       console.error(error);
@@ -149,7 +153,7 @@ export const Question = () => {
                   ? "bg-green-400 cursor-not-allowed"
                   : "bg-green-500 hover:bg-green-600"
               } 
-              text-white transition duration-200`}
+              text-white transition duration-200 cursor-pointer`}
             onClick={() => handleAnswer("예")}
             disabled={isLoading || gameOver}
           >
@@ -178,14 +182,14 @@ export const Question = () => {
             <span>{isLoading ? "생성 중..." : "예"}</span>
           </button>
           <button
-            className="bg-red-500 hover:bg-red-600 px-4 py-2 rounded"
+            className="bg-red-500 hover:bg-red-600 px-4 py-2 rounded cursor-pointer"
             onClick={() => handleAnswer("아니오")}
             disabled={isLoading || gameOver}
           >
             아니오
           </button>
           <button
-            className="bg-gray-400 hover:bg-gray-500 px-4 py-2 rounded"
+            className="bg-gray-400 hover:bg-gray-500 px-4 py-2 rounded cursor-pointer"
             onClick={() => handleAnswer("모르겠음")}
             disabled={isLoading || gameOver}
           >

@@ -54,7 +54,7 @@ export const Register = ({ isOpen, onClose }) => {
             <button
               onClick={onClose}
               aria-label="Close modal"
-              className="text-gray-500 hover:text-gray-700 text-xl font-bold p-4 -m-5"
+              className="text-gray-500 hover:text-gray-700 text-xl font-bold p-4 -m-5 cursor-pointer"
             >
               &times;
             </button>
@@ -136,7 +136,7 @@ export const Register = ({ isOpen, onClose }) => {
           </div>
 
           <button
-            className=" btn-primary p-2 w-full mt-2 bg-green-400"
+            className=" btn-primary p-2 w-full mt-2 bg-green-400 cursor-pointer"
             onClick={handleRegister}
           >
             가입하기
