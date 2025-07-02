@@ -1,6 +1,17 @@
 "use client";
 
+import axios from "axios";
+
 export const Input_answer = ({ closeModal }) => {
+  const handleAnswer = async () => {
+    try {
+      const { data } = await axios.post(
+        "http://localhost:8081/api/user/Answer"
+      );
+    } catch (error) {
+      console.log(error.response.data);
+    }
+  };
   return (
     <>
       <div className="fixed inset-0 bg-gray-500/50 bg-opacity-100 flex justify-center items-center backdrop-blur-sm">

@@ -1,50 +1,74 @@
 "use client";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef, useContext } from "react";
 import { useModal } from "../../contexts/ModalContext";
+import { UserContext } from "@/contexts/UserContext";
 
 export const Login = ({ isOpen, onClose }) => {
+  const { setUser } = useContext(UserContext);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const { closeAll, setLoggedInUser } = useModal();
+  const { closeAll } = useModal();
+  const modalRef = useRef();
 
   const handleLogin = async () => {
     try {
-      const { data } = await axios.post(
+      const { status } = await axios.post(
         "http://localhost:8081/api/common/login",
         {
-          username: { username },
-          password: { password },
-        }
+          username: username,
+          password: password,
+        },
+        { withCredentials: true }
       );
-      console.log("로그인 되었습니다.");
-      setLoggedInUser(true);
+
+      if (status === 200) {
+        const { data } = await axios.get(
+          "http://localhost:8081/api/common/SelectId",
+          { withCredentials: true }
+        );
+
+        console.log(data);
+        setUser({
+          isLogin: true,
+          data,
+        });
+      }
+
       closeAll();
     } catch (err) {
-      alert(err.response.data);
+      console.log(err.response);
     }
-
-    // if (res.status === 200) {
-    //   alert("로그인이 성공하였습니다.");
-    // } else {
-    //   alert("실패합니다.");
-    // }
   };
 
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key === "Escape") onClose();
     };
-    if (isOpen) window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [isOpen, onClose]);
+    const handleClickOutside = (e) => {
+      if (modalRef.current && !modalRef.current.contains(e.target)) {
+        onClose();
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [onClose]);
 
   if (!isOpen) return null;
 
   return (
     <>
       <div className="fixed inset-0 bg-gray-500/50 bg-opacity-100 flex justify-center items-center backdrop-blur-sm">
-        <div className="bg-white p-6 rounded-lg shadow-lg relative min-w-[300px]">
+        <div
+          className="bg-white p-6 rounded-lg shadow-lg relative min-w-[300px]"
+          ref={modalRef}
+        >
           <div className="modal-header flex justify-between w-full">
             <h2 className="modal-title m-auto">로그인</h2>
             <button

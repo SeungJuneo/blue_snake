@@ -2,6 +2,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { GoogleGenAI } from "@google/genai";
+import axios from "axios";
 
 const ai = new GoogleGenAI({ apiKey: process.env.NEXT_PUBLIC_API_KEY });
 
@@ -104,6 +105,19 @@ export const Question = () => {
     const currentAnswer = answer;
 
     const nextIndex = currentQuestionIndex + 1;
+
+    try {
+      const { data } = await axios.post(
+        "http://localhost:8081/api/user/gamesQuestion",
+        {
+          gamesId: "",
+          question: questions[currentQuestionIndex],
+          answer: currentAnswer,
+        }
+      );
+    } catch (error) {
+      console.log(error.response.data);
+    }
 
     try {
       await fetchAIResponse(currentAnswer, nextIndex);

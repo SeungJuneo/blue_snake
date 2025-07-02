@@ -12,6 +12,23 @@ export const MoreTry = () => {
   const result = searchParams.get("result");
 
   const [isThinkModalOpen, setThinkModalOpen] = useState(false);
+
+  const handleAnswer = async () => {
+    try {
+      const { data } = await axios.put(
+        "http://localhost:8081/api/user/EndEnterAnswer",
+        {
+          id: "",
+          answer: result,
+          answerTrue: true,
+        }
+      );
+      router.push("/result");
+    } catch (error) {
+      console.log(error.response.data);
+    }
+  };
+
   return (
     <>
       <div className="container mx-auto p-8">
@@ -66,7 +83,7 @@ export const MoreTry = () => {
               <div className="flex justify-around">
                 <button
                   className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded cursor-pointer"
-                  onClick={() => router.push("/result")}
+                  onClick={() => handleAnswer}
                 >
                   예
                 </button>
@@ -89,7 +106,12 @@ export const MoreTry = () => {
               return (
                 <>
                   <div></div>
-                  <Input_answer closeModal={() => setThinkModalOpen(false)} />
+                  <Input_answer
+                    closeModal={() => {
+                      setThinkModalOpen(false);
+                      router.push("/");
+                    }}
+                  />
                 </>
               );
             }

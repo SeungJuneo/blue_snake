@@ -1,35 +1,58 @@
 "use client";
+import { UserContext } from "@/contexts/UserContext";
+import axios from "axios";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect, useContext, use } from "react";
 
 export const myPage = () => {
   const router = useRouter();
+  const { user, setUser } = useContext(UserContext);
+
   const [editMode, setEditMode] = useState(false);
-  const [originalData, setOriginalData] = useState({
-    id: "user123",
-    email: "user@example.com",
-    password: "123123",
-  });
-  const [formData, setFormData] = useState(originalData);
+  const [formData, setFormData] = useState(user);
+
+  const [inputUser, setInputUser] = useState("");
+  const [inputPassword, setInputPassword] = useState("");
 
   const handleChange = (e) => {
+    const { name, value } = e.target;
+
+    // 상태 업데이트
+    if (name === "id") {
+      setInputUser(value);
+    } else if (name === "password") {
+      setInputPassword(value);
+    }
+
     setFormData((prev) => ({
       ...prev,
-      [e.target.name]: e.target.value,
+      [name]: value,
     }));
   };
+  useEffect(() => {
+    setInputUser(user.data.username);
+    setInputPassword(user.data.password);
+  }, []);
 
   const handleEditToggle = () => {
     setEditMode(true);
   };
 
-  const handleSave = () => {
-    // 여기에 저장 로직 추가 (API 요청 등)
-    console.log("저장된 값:", formData);
+  const handleSave = async () => {
+    try {
+      const { data } = await axios.put(
+        "http://localhost:8081/api/user/update",
+        { username: inputUser, password: inputPassword }
+      );
+    } catch (error) {
+      console.log(error.response.data);
+      console.log(inputUser, inputPassword);
+    }
+    // console.log("저장된 값:", formData);
     setEditMode(false);
   };
   const handleCancel = () => {
-    setFormData(originalData); // 수정 전 데이터로 복원
+    setFormData(user.data); // 수정 전 데이터로 복원
     setEditMode(false);
   };
   return (
@@ -80,6 +103,7 @@ export const myPage = () => {
               <hr className="border-zinc-400"></hr>
               <div className="mt-5">
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                  {console.log(user)}
                   <div>
                     <label
                       htmlFor="id"
@@ -91,9 +115,9 @@ export const myPage = () => {
                       type="text"
                       name="id"
                       id="id"
-                      value={formData.id}
                       onChange={handleChange}
                       disabled={!editMode}
+                      defaultValue={user.data.username}
                       className="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                     />
                   </div>
@@ -102,15 +126,15 @@ export const myPage = () => {
                       htmlFor="email"
                       className="block text-sm font-medium text-gray-700"
                     >
-                      이메일
+                      이메일(수정불가)
                     </label>
                     <input
                       type="email"
                       name="email"
                       id="email"
-                      value={formData.email}
                       onChange={handleChange}
-                      disabled={!editMode}
+                      disabled={true}
+                      defaultValue={user.data.email}
                       className="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                     />
                   </div>
@@ -125,7 +149,6 @@ export const myPage = () => {
                       type={editMode ? "text" : "password"}
                       name="password"
                       id="password"
-                      value={formData.password}
                       onChange={handleChange}
                       disabled={!editMode}
                       className="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
