@@ -9,17 +9,39 @@ import Image from "next/image";
 import { useModal } from "../contexts/ModalContext";
 import axios from "axios";
 import { UserContext } from "@/contexts/UserContext";
+import { useGame } from "@/contexts/GameContext";
+import GameRecords from "@/app/game_record/page";
 
 export const Main = () => {
   const router = useRouter();
   const { user, setUser } = useContext(UserContext);
+  const { games, setGameId } = useGame();
+  const [gameData, setGameData] = useState([]);
 
-  const { isLoginOpen, isRegisterOpen, openLogin, openRegister, closeAll } =
-    useModal();
+  const {
+    isLoginOpen,
+    isRegisterOpen,
+    openLogin,
+    openRegister,
+    closeAll,
+    isAnswerOpen,
+    setIsAnswerOpen,
+  } = useModal();
 
   const [open, setOpen] = useState(false);
   const ref = useRef(null);
 
+  // const admin = async () => {
+  //   await axios.post("http://localhost:8081/api/common/CreateAdmin", {
+  //     email: "test@test4.com",
+  //     username: "admin",
+  //     password: "12345678!",
+  //   });
+  // };
+
+  // useEffect(() => {
+  //   admin();
+  // }, []);
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (ref.current && !ref.current.contains(event.target)) {
@@ -33,18 +55,6 @@ export const Main = () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
-  const games = {
-    game1: { correctanswer: "손은", user: "user01" },
-    game2: { correctanswer: "트랄라", user: "user02" },
-    game3: { correctanswer: "scp-049", user: "user03" },
-    game4: { correctanswer: "scp-106", user: "user04" },
-    game5: { correctanswer: "scp-3006", user: "user05" },
-    game6: { correctanswer: "scp-217", user: "user06" },
-    game7: { correctanswer: "scp-079", user: "user07" },
-    game8: { correctanswer: "scp-939", user: "user08" },
-    game9: { correctanswer: "scp-096", user: "user09" },
-    game10: { correctanswer: "수감자", user: "user10" },
-  };
 
   const handleLogOut = async () => {
     try {
@@ -69,12 +79,30 @@ export const Main = () => {
 
   const handleStart = async () => {
     try {
-      const { data } = await axios.post("http://localhost:8081/api/user/games");
+      const { data } = await axios.post(
+        "http://localhost:8081/api/user/games",
+        {},
+        { withCredentials: true }
+      );
+      console.log("게임 생성 완료");
+      setGameId(data);
     } catch (error) {
       console.log(error.response.data);
     }
   };
 
+  const handleTenGames = async (id) => {
+    try {
+      const { data } = await axios.post(
+        "http://localhost:8081/api/common/GamesHistoryWithAnswer",
+        { gamesId: id }
+      );
+      setIsAnswerOpen(true);
+      setGameData(data); // 받아온 데이터를 상태에 저장
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <>
       <header className="bg-white shadow">
@@ -155,15 +183,16 @@ export const Main = () => {
         <aside className="col-span-1">
           <div className="bg-white shadow rounded p-4">
             <h2 className="text-lg font-semibold mb-2">최근 10게임</h2>
-            <ul className=" overflow-hidden ">
-              {Object.entries(games).map(([key, game]) => (
+            <ul className=" overflow-hidden cursor-pointer">
+              {games.map(({ id, answer, answerTrue }) => (
                 <li
-                  key={key}
+                  key={id}
                   className="py-4 border-b border-gray-200 flex items-center justify-between"
+                  onClick={() => handleTenGames(id)}
                 >
-                  {game.correctanswer}
+                  {answer}
                   <button className="text-red-500 hover:text-red-700">
-                    &times;
+                    {answerTrue ? "\u00D7" : "O"}
                   </button>
                 </li>
               ))}
@@ -185,9 +214,6 @@ export const Main = () => {
             <h2 className="text-2xl font-semibold text-center mb-4 p-4">
               Dragon
             </h2>
-            <div className="flex justify-center">
-              {/* <img src="https://placehold.co/200x200" alt="User Avatar" className="rounded-full mb-4"> */}
-            </div>
             <div className="text-center">
               <Link
                 href="/question"
@@ -226,7 +252,7 @@ export const Main = () => {
               <br />
               나오는 10개 미만의 질문에
               <br />
-              "예, 아니오, 모르겠음" 중 하나를 선택해주세요.
+              "예,아니오,모르겠습니다" 중 하나를 선택해주세요.
             </span>
           </div>
         </main>
@@ -269,6 +295,17 @@ export const Main = () => {
             <>
               <div></div>
               <Login isOpen={isLoginOpen} onClose={closeAll} />
+            </>
+          );
+        } else if (isAnswerOpen) {
+          return (
+            <>
+              <div></div>
+              <GameRecords
+                isOpen={isAnswerOpen}
+                onClose={() => setIsAnswerOpen(false)}
+                data={gameData}
+              />
             </>
           );
         }

@@ -1,8 +1,10 @@
 "use client";
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useContext } from "react";
 import { useRouter } from "next/navigation";
 import { GoogleGenAI } from "@google/genai";
 import axios from "axios";
+import { UserContext } from "@/contexts/UserContext";
+import { useGame } from "@/contexts/GameContext";
 
 const ai = new GoogleGenAI({ apiKey: process.env.NEXT_PUBLIC_API_KEY });
 
@@ -35,6 +37,21 @@ export const Question = () => {
   const chatRef = useRef(null); // 채팅 세션 유지용
   const [isLoading, setIsLoading] = useState(false);
   const clickLocked = useRef(false);
+  const { user } = useContext(UserContext);
+  const { gameId } = useGame();
+
+  if (!gameId)
+    return () => {
+      router.replace("/");
+    };
+
+  useEffect(() => {
+    if (user) {
+      if (user.data.role !== "ADMIN" && user.data.role !== "USER") {
+        router.replace("/");
+      }
+    }
+  }, [user]);
 
   // AI 질문 스트림 받아오기
   const fetchAIResponse = async (userAnswer, targetIndex) => {
@@ -110,11 +127,13 @@ export const Question = () => {
       const { data } = await axios.post(
         "http://localhost:8081/api/user/gamesQuestion",
         {
-          gamesId: "",
+          gamesId: gameId,
           question: questions[currentQuestionIndex],
           answer: currentAnswer,
-        }
+        },
+        { withCredentials: true }
       );
+      console.log(data);
     } catch (error) {
       console.log(error.response.data);
     }
@@ -207,12 +226,12 @@ export const Question = () => {
             onClick={() => handleAnswer("모르겠음")}
             disabled={isLoading || gameOver}
           >
-            모르겠음
+            모르겠습니다
           </button>
         </div>
 
         <div className="mt-6 text-sm text-gray-200">
-          질문 {currentQuestionIndex + 1} / 35
+          질문 {currentQuestionIndex + 1} / 20
         </div>
       </div>
     </div>

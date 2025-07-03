@@ -4,10 +4,13 @@ import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import Input_answer from "../input_answer/page";
 import { useState } from "react";
+import { useGame } from "@/contexts/GameContext";
+import axios from "axios";
 
 export const MoreTry = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { gameId } = useGame();
 
   const result = searchParams.get("result");
 
@@ -18,12 +21,14 @@ export const MoreTry = () => {
       const { data } = await axios.put(
         "http://localhost:8081/api/user/EndEnterAnswer",
         {
-          id: "",
+          id: gameId,
           answer: result,
           answerTrue: true,
-        }
+        },
+        { withCredentials: true }
       );
-      router.push("/result");
+      console.log(data);
+      router.push(`/result?result=${encodeURIComponent(result)}`);
     } catch (error) {
       console.log(error.response.data);
     }
@@ -53,7 +58,7 @@ export const MoreTry = () => {
                 당신이 생각한게 맞습니까?
               </h2>
               <h2 className="text-lg font-semibold  mb-4 text-green-600">
-                이름:{" "}
+                이름:
                 <span className="text-3xl text-gray-700">
                   &nbsp; {result ? result : "로딩 중..."}
                 </span>
@@ -65,7 +70,7 @@ export const MoreTry = () => {
                   className="rounded-lg shadow-sm mx-auto cursor-pointer"
                   width={200}
                   height={100}
-                  onClick={() => router.push("/result")}
+                  onClick={handleAnswer}
                 />
                 <div className="content">or</div>
                 <Image
@@ -83,7 +88,7 @@ export const MoreTry = () => {
               <div className="flex justify-around">
                 <button
                   className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded cursor-pointer"
-                  onClick={() => handleAnswer}
+                  onClick={handleAnswer}
                 >
                   예
                 </button>

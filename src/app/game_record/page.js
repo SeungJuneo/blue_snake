@@ -2,54 +2,9 @@
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
-const sampleRecords = [
-  {
-    id: 1,
-    date: "2025-06-22",
-    questions: [
-      {
-        question: "한국의 수도는?",
-        correct: true,
-        unknown: false,
-        aiCorrect: true,
-      },
-      {
-        question: "태양은 동쪽에서 뜬다?",
-        correct: false,
-        unknown: false,
-        aiCorrect: false,
-      },
-      {
-        question: "2+2=5인가?",
-        correct: false,
-        unknown: true,
-        aiCorrect: false,
-      },
-    ],
-  },
-  {
-    id: 2,
-    date: "2025-06-20",
-    questions: [
-      {
-        question: "물의 끓는점은 100도?",
-        correct: true,
-        unknown: false,
-        aiCorrect: true,
-      },
-      {
-        question: "지구는 평평하다?",
-        correct: false,
-        unknown: false,
-        aiCorrect: false,
-      },
-    ],
-  },
-];
-
-export default function GameRecords() {
+export default function GameRecords({ isOpen, onClose, data }) {
   const router = useRouter();
-  const [records] = useState(sampleRecords);
+  const [records] = useState(data);
   const [selectedRecord, setSelectedRecord] = useState(null);
 
   // 답변 상태에 따른 표시 문자 및 색상

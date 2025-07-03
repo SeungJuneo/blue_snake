@@ -9,11 +9,20 @@ export const myPage = () => {
   const { user, setUser } = useContext(UserContext);
 
   const [editMode, setEditMode] = useState(false);
-  const [formData, setFormData] = useState(user);
 
-  const [inputUser, setInputUser] = useState("");
-  const [inputPassword, setInputPassword] = useState("");
+  const [inputUser, setInputUser] = useState(user.data.username);
+  const [inputPassword, setInputPassword] = useState("########");
 
+  const [originalUser, setOriginalUser] = useState(user.data.username);
+  const [originalPassword, setOriginalPassword] = useState("########");
+
+  useEffect(() => {
+    if (user) {
+      if (user.data.role !== "ADMIN" && user.data.role !== "USER") {
+        router.replace("/");
+      }
+    }
+  }, [user]);
   const handleChange = (e) => {
     const { name, value } = e.target;
 
@@ -23,18 +32,12 @@ export const myPage = () => {
     } else if (name === "password") {
       setInputPassword(value);
     }
-
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
   };
-  useEffect(() => {
-    setInputUser(user.data.username);
-    setInputPassword(user.data.password);
-  }, []);
 
   const handleEditToggle = () => {
+    setOriginalUser(inputUser);
+    setOriginalPassword(inputPassword);
+    setInputPassword("");
     setEditMode(true);
   };
 
@@ -42,17 +45,20 @@ export const myPage = () => {
     try {
       const { data } = await axios.put(
         "http://localhost:8081/api/user/update",
-        { username: inputUser, password: inputPassword }
+        { username: inputUser, password: inputPassword },
+        { withCredentials: true }
       );
+      setInputUser(originalUser);
+      setInputPassword(originalPassword);
     } catch (error) {
       console.log(error.response.data);
-      console.log(inputUser, inputPassword);
     }
-    // console.log("저장된 값:", formData);
     setEditMode(false);
   };
   const handleCancel = () => {
-    setFormData(user.data); // 수정 전 데이터로 복원
+    // 수정 전 데이터로 복원
+    setInputUser(originalUser);
+    setInputPassword(originalPassword);
     setEditMode(false);
   };
   return (
@@ -149,6 +155,7 @@ export const myPage = () => {
                       type={editMode ? "text" : "password"}
                       name="password"
                       id="password"
+                      value={inputPassword}
                       onChange={handleChange}
                       disabled={!editMode}
                       className="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"

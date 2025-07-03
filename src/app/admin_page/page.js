@@ -1,4 +1,5 @@
 "use client";
+import { useGame } from "@/contexts/GameContext";
 import { UserContext } from "@/contexts/UserContext";
 import axios from "axios";
 import { useRouter } from "next/navigation";
@@ -8,7 +9,6 @@ export const Admin_page = () => {
   const router = useRouter();
   const { user } = useContext(UserContext);
 
-  const [value, setValue] = useState("");
   const [up, setUp] = useState("유저관리");
 
   const isSelected = (tab) =>
@@ -19,10 +19,8 @@ export const Admin_page = () => {
       setValue("");
     }
   };
-  const handleBlur = () => {
-    setValue("");
-  };
   const [users, setUsers] = useState({});
+  const { games } = useGame();
   // const users = {
   //   user1: { nickname: "철수", email: "r232@email.com" },
   //   user2: { nickname: "영희", email: "rte32@email.com" },
@@ -180,9 +178,7 @@ export const Admin_page = () => {
                     <span className="text-gray-600 w-50 text-center">
                       이메일
                     </span>
-                    <span className="text-gray-600 text-center w-50 text-center">
-                      권한
-                    </span>
+                    <span className="text-gray-600 w-50 text-center">권한</span>
                   </div>
 
                   <ul
@@ -196,7 +192,7 @@ export const Admin_page = () => {
                       >
                         <div className="flex gap-38 ml-32">
                           <span className="w-31">{user.username}</span>
-                          <span className="w-38">{user.email}</span>
+                          <span className="w-50">{user.email}</span>
                           <div className="w-50">
                             <select name="us">
                               <option value="admin">관리자</option>
@@ -217,7 +213,7 @@ export const Admin_page = () => {
                     </span>
                     <span className="text-gray-600 w-50 text-center">정답</span>
                     <span className="text-gray-600 w-50 text-center ">
-                      오답/정답유무
+                      O / X
                     </span>
                   </div>
 
@@ -225,23 +221,24 @@ export const Admin_page = () => {
                     className="space-y-2 flex flex-wrap  flex-col overflow-hidden
             "
                   >
-                    {Object.entries(users).map(([key, user]) => (
-                      <li
-                        key={key}
-                        className="flex py-1 border-b hover-effect "
-                      >
-                        <div className="flex gap-38 ml-32">
-                          <span className="w-31">{user.username}</span>
-                          <span className="w-38">{user.email}</span>
-                          <div className="w-50">
-                            <select name="us">
-                              <option value="admin">관리자</option>
-                              <option value="user">일반유저</option>
-                            </select>
+                    {Object.entries(users).map(([key, user]) => {
+                      const game = games.find((g) => g.user_id === user.id);
+
+                      return (
+                        <li
+                          key={key}
+                          className="flex py-1 border-b hover-effect "
+                        >
+                          <div className="flex gap-38 ml-32">
+                            <span className="w-31">{user.username}</span>
+                            <span className="w-50">
+                              {game ? games.answer : "답변없음"}
+                            </span>
+                            <div className="w-50 px-8">No</div>
                           </div>
-                        </div>
-                      </li>
-                    ))}
+                        </li>
+                      );
+                    })}
                   </ul>
                 </div>
               )}

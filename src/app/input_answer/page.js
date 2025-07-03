@@ -1,16 +1,30 @@
 "use client";
 
+import { useGame } from "@/contexts/GameContext";
 import axios from "axios";
+import { useState } from "react";
 
 export const Input_answer = ({ closeModal }) => {
+  const [result, setResult] = useState("");
+
+  const { gameId } = useGame();
+
   const handleAnswer = async () => {
     try {
       const { data } = await axios.post(
-        "http://localhost:8081/api/user/Answer"
+        "http://localhost:8081/api/user/Answer",
+        { gamesHistoryId: gameId, answer: result },
+        { withCredentials: true }
       );
+      closeModal();
     } catch (error) {
       console.log(error.response.data);
+      console.log(gameId, result);
     }
+  };
+
+  const handleChange = (e) => {
+    setResult(e.target.value); // 입력값 변경 시 상태 업데이트
   };
   return (
     <>
@@ -34,13 +48,14 @@ export const Input_answer = ({ closeModal }) => {
               type="text"
               id="name"
               className="input-field shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              onChange={handleChange}
             />
           </div>
 
           <div className="mb-6">
             <button
               className="btn-primary bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-              onClick={closeModal}
+              onClick={handleAnswer}
             >
               전송
             </button>

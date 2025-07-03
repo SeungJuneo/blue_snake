@@ -2,6 +2,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { ModalProvider } from "../contexts/ModalContext";
 import "./globals.css";
 import { UserContextProvider } from "@/contexts/UserContext";
+import { GameProvider } from "@/contexts/GameContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -20,14 +21,16 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <UserContextProvider>
-      <html lang="en">
-        <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-        >
-          <ModalProvider>{children}</ModalProvider>
-        </body>
-      </html>
-    </UserContextProvider>
+    <GameProvider>
+      <UserContextProvider>
+        <html lang="en">
+          <body
+            className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+          >
+            <ModalProvider>{children}</ModalProvider>
+          </body>
+        </html>
+      </UserContextProvider>
+    </GameProvider>
   );
 }
