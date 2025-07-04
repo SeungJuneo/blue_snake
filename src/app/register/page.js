@@ -50,7 +50,7 @@ export const Register = ({ isOpen, onClose }) => {
         }
       );
       setEmailClick(true);
-
+        console.log(data);
       console.log("이메일 전송완료");
       setEmailValue("이메일을 보냈습니다.");
     } catch (error) {

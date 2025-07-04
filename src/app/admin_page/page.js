@@ -117,52 +117,52 @@ export const Admin_page = () => {
                   <ul>
                     <li className="px-4 py-2 hover-effect">
                       <a href="#" className="block">
-                        Option 2
+                        악당
                       </a>
                     </li>
                     <li className="px-4 py-2 hover-effect">
                       <a href="#" className="block">
-                        Option 3
+                        어린아이
                       </a>
                     </li>
                     <li className="px-4 py-2 hover-effect">
                       <a href="#" className="block">
-                        Option 4
+                        할아버지
                       </a>
                     </li>
                     <li className="px-4 py-2 hover-effect">
                       <a href="#" className="block">
-                        Option 5
+                        선생님
                       </a>
                     </li>
                     <li className="px-4 py-2 hover-effect">
                       <a href="#" className="block">
-                        Option 6
+                        이대희 선생님
                       </a>
                     </li>
                     <li className="px-4 py-2 hover-effect">
                       <a href="#" className="block">
-                        Option 6
+                        스파이더맨
                       </a>
                     </li>
                     <li className="px-4 py-2 hover-effect">
                       <a href="#" className="block">
-                        Option 6
+                        엘사
                       </a>
                     </li>
                     <li className="px-4 py-2 hover-effect">
                       <a href="#" className="block">
-                        Option 6
+                        학생
                       </a>
                     </li>
                     <li className="px-4 py-2 hover-effect">
                       <a href="#" className="block">
-                        Option 6
+                        국회의원
                       </a>
                     </li>
                     <li className="px-4 py-2 hover-effect">
                       <a href="#" className="block">
-                        Option 6
+                        대통령
                       </a>
                     </li>
                   </ul>

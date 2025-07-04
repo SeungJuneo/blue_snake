@@ -1,11 +1,22 @@
 "use client";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 export default function GameRecords({ isOpen, onClose, data }) {
   const router = useRouter();
-  const [records] = useState(data);
   const [selectedRecord, setSelectedRecord] = useState(null);
+
+  // data가 undefined/null일 수 있으니 기본값 빈 배열로 설정
+  const records = data || [];
+
+  // 선택된 레코드가 바뀔 때마다 선택 초기화(선택한 데이터가 사라지는 경우 대비)
+  useEffect(() => {
+    if (selectedRecord && !records.find((r) => r.id === selectedRecord.id)) {
+      setSelectedRecord(null);
+    }
+  }, [records, selectedRecord]);
+
+  if (!isOpen) return null;
 
   // 답변 상태에 따른 표시 문자 및 색상
   const getAnswerDisplay = ({ correct, unknown }) => {
@@ -100,7 +111,7 @@ export default function GameRecords({ isOpen, onClose, data }) {
               {selectedRecord.date} 게임 상세 기록
             </h2>
             <ul>
-              {selectedRecord.questions.map(
+              {(selectedRecord.questions || []).map(
                 ({ question, correct, unknown, aiCorrect }, idx) => {
                   const { text, color } = getAnswerDisplay({
                     correct,

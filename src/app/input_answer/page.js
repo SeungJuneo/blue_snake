@@ -11,15 +11,15 @@ export const Input_answer = ({ closeModal }) => {
 
   const handleAnswer = async () => {
     try {
-      const { data } = await axios.post(
-        "http://localhost:8081/api/user/Answer",
-        { gamesHistoryId: gameId, answer: result },
+      const { data } = await axios.put(
+        "http://localhost:8081/api/user/EndEnterAnswer",
+        { id: gameId, answer: result, answerTrue: false },
         { withCredentials: true }
       );
       closeModal();
     } catch (error) {
-      console.log(error.response.data);
-      console.log(gameId, result);
+      // console.log(error.response.data);
+      // console.log(gameId, result);
     }
   };
 

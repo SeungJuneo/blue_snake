@@ -31,7 +31,7 @@ export const Result = () => {
         <div className="bg-white rounded-lg shadow-md p-6 flex items-start space-x-8">
           <div className="w-1/3">
             <Image
-              src="/python_snake.jpg"
+              src="/know_snake.png"
               alt="Character"
               className="rounded-lg"
               height={500}
@@ -46,9 +46,9 @@ export const Result = () => {
             <h1 className="text-2xl font-semibold text-gray-800">
               훌륭하죠? 접니다
             </h1>
-            <h2 className="text-gray-700 mt-2 text-3xl">{result}</h2>
+            <h2 className="text-gray-700 mt-2 text-3xl text-center ">{result}</h2>
 
-            <div className="mt-6 space-y-4">
+            <div className="mt-47 space-y-4">
               <button
                 className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full transition duration-200 cursor-pointer"
                 onClick={() => handleStart()}

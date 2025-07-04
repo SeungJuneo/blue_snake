@@ -11,6 +11,8 @@ import axios from "axios";
 import { UserContext } from "@/contexts/UserContext";
 import { useGame } from "@/contexts/GameContext";
 import GameRecords from "@/app/game_record/page";
+import { data } from "react-router-dom";
+import ShowGameModal from "@/app/show_game/page";
 
 export const Main = () => {
   const router = useRouter();
@@ -31,17 +33,21 @@ export const Main = () => {
   const [open, setOpen] = useState(false);
   const ref = useRef(null);
 
-  // const admin = async () => {
-  //   await axios.post("http://localhost:8081/api/common/CreateAdmin", {
-  //     email: "test@test4.com",
-  //     username: "admin",
-  //     password: "12345678!",
-  //   });
-  // };
+  const admin = async () => {
+    try{
+      await axios.post("http://localhost:8081/api/common/CreateAdmin", {
+        email: "test@test4.com",
+        username: "admin",
+        password: "12345678!",
+      });
+    }catch (error){
+    }
+    
+  };
 
-  // useEffect(() => {
-  //   admin();
-  // }, []);
+  useEffect(() => {
+    admin();
+  }, []);
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (ref.current && !ref.current.contains(event.target)) {
@@ -191,8 +197,9 @@ export const Main = () => {
                   onClick={() => handleTenGames(id)}
                 >
                   {answer}
-                  <button className="text-red-500 hover:text-red-700">
-                    {answerTrue ? "\u00D7" : "O"}
+                  <button className={answerTrue ? "text-green-500 hover:text-green-700" : "text-red-500 hover:text-red-700"}>
+                    {answerTrue ?  "O" : " X"}
+                    {/* \u00D7 */}
                   </button>
                 </li>
               ))}
@@ -212,7 +219,7 @@ export const Main = () => {
               width={500}
             />
             <h2 className="text-2xl font-semibold text-center mb-4 p-4">
-              Dragon
+              청사 추리관
             </h2>
             <div className="text-center">
               <Link
@@ -266,7 +273,7 @@ export const Main = () => {
               </button>
             </div>
             <Image
-              src="/"
+              src="/semyeong_ad.png"
               alt="ax"
               className="flex items-center justify-center p-5 bg-gray-100 text-gray-500 rounded"
               height={645}
@@ -301,7 +308,7 @@ export const Main = () => {
           return (
             <>
               <div></div>
-              <GameRecords
+              <ShowGameModal
                 isOpen={isAnswerOpen}
                 onClose={() => setIsAnswerOpen(false)}
                 data={gameData}
