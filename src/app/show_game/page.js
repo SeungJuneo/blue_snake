@@ -30,17 +30,17 @@ const ShowGameModal = ({ isOpen, onClose, data }) => {
         <h1 className="text-3xl font-bold mb-6 text-center">질문 및 답변 목록</h1>
 
       <ul className={`space-y-4 grid grid-cols-1 md:${columnCountClass} gap-4`}>
-        {data.map(({ id, answerTrue, answer }) => {
+        {data.map(({ id, question, answer }) => {
           // gameAnswers가 있으면 첫 번째 answerTrue 값을 가져오고, 없으면 undefined
+          let answerTrue = false;
           count = count + 1;
-        //   let answerTrue = false;
-        //   if (answer === "예"){
-        //     answerTrue = true;
-        //   }else if (answer === "아니오") {
-        //     answerTrue = false;
-        //   }else {
-        //     answerTrue = undefined;
-        //   }
+          if (answer === "예"){
+            answerTrue = true;
+          }else if (answer === "아니오") {
+            answerTrue = false;
+          }else {
+            answerTrue = undefined;
+          }
 
           
           return (
@@ -49,7 +49,7 @@ const ShowGameModal = ({ isOpen, onClose, data }) => {
               className="border rounded p-4 flex justify-between items-center hover:bg-gray-50"
             >
               <div>
-                <p className="text-lg font-semibold">{answer && answer.includes("정답:")  ? "" : count+". "} {answer}</p>
+                <p className="text-lg font-semibold">{question && question.includes("정답:")  ? "" : count+". "} {question}</p>
               </div>
               <div className="text-2xl font-bold">
                 {/* answerTrue가 undefined면 △ , true면 O, false면 X */}
