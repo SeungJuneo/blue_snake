@@ -49,7 +49,7 @@ const ShowGameModal = ({ isOpen, onClose, data }) => {
               className="border rounded p-4 flex justify-between items-center hover:bg-gray-50"
             >
               <div>
-                <p className="text-lg font-semibold">{question && question.includes("정답:")  ? "" : count+". "} {question.replace(/undefined/g, "")}</p>
+                <p className="text-lg font-semibold ">{question && question.includes("정답:")  ? "" : count+". "} {question.replace(/undefined/g, "")}</p>
               </div>
               <div className="text-2xl font-bold">
                 {/* answerTrue가 undefined면 △ , true면 O, false면 X */}

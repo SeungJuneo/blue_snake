@@ -72,7 +72,7 @@ const ShowGameAnswerModal = ({ isOpen, onClose, data }) => {
           return (answer &&
             <li
               key={id}
-              className="border rounded p-4 flex justify-between items-center hover:bg-gray-50" onClick={()=>handleTenGames(id)}
+              className="border rounded p-4 flex justify-between items-center hover:bg-gray-50 cursor-pointer" onClick={()=>handleTenGames(id)}
             >
               <div>
                 <p className="text-lg font-semibold" >{ answer.includes("정답:")  ? "" : count+". "} {answer.replace(/undefined/g, "")}</p>

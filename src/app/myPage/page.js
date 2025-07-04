@@ -57,8 +57,8 @@ export const myPage = () => {
         { username: inputUser, password: inputPassword },
         { withCredentials: true }
       );
-      setInputUser(originalUser);
-      setInputPassword(originalPassword);
+      setOriginalUser(inputUser);
+      setOriginalPassword(inputPassword);
     } catch (error) {
       console.log(error.response.data);
     }
@@ -140,6 +140,7 @@ export const myPage = () => {
                       type="text"
                       name="id"
                       id="id"
+                      value={inputUser}
                       onChange={handleChange}
                       disabled={!editMode}
                       defaultValue={user.data.username}
