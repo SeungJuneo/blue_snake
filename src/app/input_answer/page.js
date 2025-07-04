@@ -31,7 +31,7 @@ export const Input_answer = ({ closeModal }) => {
       <div className="fixed inset-0 bg-gray-500/50 bg-opacity-100 flex justify-center items-center backdrop-blur-sm">
         <div className="bg-white p-6 rounded-lg shadow-lg relative min-w-[300px]">
           <div className="modal-header flex justify-between w-full">
-            <h1 className="text-2xl font-bold text-green-500">dr님께</h1>
+            <h1 className="text-2xl font-bold text-green-500">청사 추리관에게 말해주세요</h1>
           </div>
 
           <div className="mb-4">

@@ -60,7 +60,7 @@ export const MoreTry = () => {
               <h2 className="text-lg font-semibold  mb-4 text-green-600">
                 이름:
                 <span className="text-3xl text-gray-700">
-                  &nbsp; {result ? result : "로딩 중..."}
+                  &nbsp; {result.replace(/undefined/g, "") ? result.replace(/undefined/g, "") : "로딩 중..."}
                 </span>
               </h2>
               <div className="flex">

@@ -46,7 +46,7 @@ export const Result = () => {
             <h1 className="text-2xl font-semibold text-gray-800">
               훌륭하죠? 접니다
             </h1>
-            <h2 className="text-gray-700 mt-2 text-3xl text-center ">{result}</h2>
+            <h2 className="text-gray-700 mt-2 text-3xl text-center ">{result.replace(/undefined/g, "")}</h2>
 
             <div className="mt-47 space-y-4">
               <button
