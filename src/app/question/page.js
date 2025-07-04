@@ -174,7 +174,7 @@ export const Question = () => {
       <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-indigo-900 to-purple-700 text-white p-6">
         <div className="flex flex-col items-center">
           <div className="bg-white text-black rounded-xl p-4 text-lg shadow-lg max-w-md min-h-[100px]">
-            {questions[currentQuestionIndex] || "로딩 중..."}
+            {(questions[currentQuestionIndex] || "로딩 중...").replace(/undefined/g, "")}
           </div>
         </div>
 

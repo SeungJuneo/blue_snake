@@ -5,6 +5,8 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useState, useEffect, useContext, use } from "react";
 import ShowGameModal from "../show_game/page";
+import ShowGameAnswerModal from "../show_gameAnswer/page";
+import { useGame } from "@/contexts/GameContext";
 
 export const myPage = () => {
   const router = useRouter();
@@ -21,7 +23,7 @@ export const myPage = () => {
   const [originalPassword, setOriginalPassword] = useState("########");
 
   const [gameData,setGameData] = useState([]);
-
+  
   
   useEffect(() => {
     if (user) {
@@ -62,6 +64,7 @@ export const myPage = () => {
     }
     setEditMode(false);
   };
+  
   const handleCancel = () => {
     // 수정 전 데이터로 복원
     setInputUser(originalUser);
@@ -203,7 +206,8 @@ export const myPage = () => {
             return (
               <>
                 <div></div>
-                <ShowGameModal 
+                <ShowGameAnswerModal
+                  onClick={handleSelect} 
                   isOpen={isAnswerOpen}
                   onClose={() => setIsAnswerOpen(false)}
                   data={gameData}

@@ -10,7 +10,7 @@ const ShowGameModal = ({ isOpen, onClose, data }) => {
     }
   };
   
-  const columnCountClass = data.length >= 15 ? 'grid-cols-3' : 'grid-cols-2';
+  const columnCountClass = Array.isArray(data) && data.length >= 15 ? 'grid-cols-3' : 'grid-cols-2';
   let count = 0;
   return (
     <div
@@ -49,7 +49,7 @@ const ShowGameModal = ({ isOpen, onClose, data }) => {
               className="border rounded p-4 flex justify-between items-center hover:bg-gray-50"
             >
               <div>
-                <p className="text-lg font-semibold">{question && question.includes("정답:")  ? "" : count+". "} {question}</p>
+                <p className="text-lg font-semibold">{question && question.includes("정답:")  ? "" : count+". "} {question.replace(/undefined/g, "")}</p>
               </div>
               <div className="text-2xl font-bold">
                 {/* answerTrue가 undefined면 △ , true면 O, false면 X */}

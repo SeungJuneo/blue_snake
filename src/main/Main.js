@@ -41,6 +41,7 @@ export const Main = () => {
         password: "12345678!",
       });
     }catch (error){
+      
     }
     
   };
@@ -196,7 +197,7 @@ export const Main = () => {
                   className="py-4 border-b border-gray-200 flex items-center justify-between"
                   onClick={() => handleTenGames(id)}
                 >
-                  {answer}
+                  {answer.replace(/undefined/g, "")}
                   <button className={answerTrue ? "text-green-500 hover:text-green-700" : "text-red-500 hover:text-red-700"}>
                     {answerTrue ?  "O" : " X"}
                     {/* \u00D7 */}
